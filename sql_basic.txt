@@ -1,0 +1,73 @@
+url:http://hissori18.web.fc2.com/chapter_4/delete.html
+url:https://sqlzoo.net/wiki/Self_join
+
+#基本
+SELECT population FROM world
+  WHERE name = 'France'
+
+SELECT name, population FROM world
+  WHERE name IN ('Brazil', 'Russia', 'India', 'China');
+
+SELECT name, area FROM world
+  WHERE area BETWEEN 250000 AND 300000
+
+＃正規表現
+SELECT name FROM world
+ WHERE name LIKE 'a%' OR name LIKE 'l%'
+
+SELECT name,length(name)
+FROM world
+WHERE length(name)=5 and continent='Europe'
+
+
+CREATE TABLE tbl_exam(
+ id CHAR(5) UNIQUE,
+ eng INT CHECK(100 >= eng && eng >= 0),
+ math INT CHECK(100 >= math && math >= 0),
+ memo VARCHAR(50) DEFAULT 'なし',
+ PRIMARY KEY(id)
+);
+
+＃並び替え
+SELECT * FROM tbl_exam ORDER BY eng DESC;
+SELECT * FROM tbl_exam ORDER BY eng ASC;
+＃削除
+DELETE FROM tbl_exam WHERE id='00001';
+＊分布
+SELECT eng, COUNT(eng) FROM tbl_exam GROUP BY eng;
+＃重複
+SELECT DISTINCT memo FROM tbl_exam;
+
+# eng をEnglish
+SELECT id, eng AS English, math, memo FROM tbl_exam;
+＃合わせて
+SELECT id, CONCAT(addr1, addr2) AS address FROM tbl_std;
+＃文字が含まれるかどうか
+SELECT * FROM tbl_std WHERE addr1 LIKE '%道%';
+
+INSERT INTO tbl_exam(
+ id, eng, math
+)
+VALUES(
+ '00006', '55', NULL
+),(
+ '00007', NULL, '55'
+);
+SELECT * FROM tbl_exam WHERE eng IS NULL OR math IS NULL;
+＃平均点
+SELECT * FROM tbl_exam WHERE eng < (SELECT AVG(eng) FROM tbl_exam);
+＃havingでサブクエリ
+SELECT eng, COUNT(eng) FROM tbl_exam GROUP BY eng HAVING eng > 70;
+
+＃結合
+SELECT
+　tbl_std.id, 
+　tbl_std.name, 
+　tbl_exam.* 
+FROM
+　tbl_std
+CROSS JOIN
+　tbl_exam;
+
+
+
